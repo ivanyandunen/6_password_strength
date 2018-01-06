@@ -62,12 +62,12 @@ if __name__ == '__main__':
     try:
         blacklist = load_blacklist(sys.argv[1])
         password = input('Please enter your password: ')
-        password_strenght = get_password_strength(password, blacklist)
-        print("Your password's strenght is {}".format(password_strenght))
+        password_strength = get_password_strength(password, blacklist)
+        print("Your password's strength is {}".format(password_strength))
 
     except (IndexError, FileNotFoundError):
         print('Input file is not specified or missed')
     except UnicodeDecodeError:
         print('Incorrect file')
     except SystemExit:
-        print('Your password in blacklist! Strenght = 1 Please try again')
+        print('Your password in blacklist! Strength = 1 Please try again')
