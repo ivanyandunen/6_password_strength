@@ -7,11 +7,10 @@ def load_blacklist(filepath):
 
 
 def password_in_blacklist(password, blacklist):
-    word_in_list = False
     for word in blacklist.split():
         if password == word:
-            word_in_list = True
-    return word_in_list
+            raise SystemExit
+    return 2
 
 
 def password_length(password):
@@ -48,29 +47,23 @@ def password_contains_special(password):
         return 0
 
 
-def get_password_strength(password):
-    password_not_in_blacklist = 2
+def get_password_strength(password, blacklist):
     password_strength = (
             password_length(password) +
             password_contains_numbers(password) +
             password_contains_register(password) +
             password_contains_special(password) +
-            password_not_in_blacklist
+            password_in_blacklist(password, blacklist)
     )
     return password_strength
 
 
 if __name__ == '__main__':
     try:
-        blacklist_file = sys.argv[1]
-
-        blacklist = load_blacklist(blacklist_file)
+        blacklist = load_blacklist(sys.argv[1])
         password = input('Please enter your password: ')
-        if password_in_blacklist(password, blacklist):
-            raise SystemExit
-        else:
-            password_strenght = get_password_strength(password)
-            print("Your password's strenght is {}".format(password_strenght))
+        password_strenght = get_password_strength(password, blacklist)
+        print("Your password's strenght is {}".format(password_strenght))
 
     except (IndexError, FileNotFoundError):
         print('Input file is not specified or missed')
