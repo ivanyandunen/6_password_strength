@@ -19,7 +19,7 @@ Your password's strenght is 10
 
 C:\6_password_strength>python password_strength.py blacklist.txt
 Please enter your password: password
-Your password in blacklist! Strenght = 1 Please try again
+Your password's strenght is 1
 
 C:\6_password_strength>python password_strength.py blacklist.txt
 Please enter your password: 54321
