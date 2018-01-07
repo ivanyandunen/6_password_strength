@@ -1,4 +1,5 @@
 import sys
+import getpass
 
 
 def load_blacklist(filepath):
@@ -6,62 +7,48 @@ def load_blacklist(filepath):
         return blacklist.read()
 
 
-def password_in_blacklist(password, blacklist):
-    for word in blacklist.split():
-        if password == word:
-            raise SystemExit
-    return 2
+def password_not_in_blacklist(password, blacklist):
+    return bool(password not in blacklist.split())
 
 
-def password_length(password):
-    recommended_lenght = 8
-    if len(password) < recommended_lenght:
-        return 0
-    else:
-        return 2
+def get_password_length(password):
+    recommended_length = 8
+    return bool(len(password) >= recommended_length)
 
 
 def password_contains_numbers(password):
-    if password.isdigit():
-        return 0
-    elif any(char.isdigit() for char in password):
-        return 2
-    else:
-        return 1
+    return bool(any(char.isdigit() for char in password))
 
 
-def password_contains_register(password):
+def case_sensitivity_check(password):
     if not password.isdigit():
-        if (password.isupper() or password.islower()):
-            return 0
-        else:
-            return 2
+        return bool(not(password.isupper() or password.islower()))
     else:
-        return 0
+        return False
 
 
 def password_contains_special(password):
-    if not password.isalnum():
-        return 2
-    else:
-        return 0
+    return bool(not password.isalnum())
 
 
 def get_password_strength(password, blacklist):
-    password_strength = (
-            password_length(password) +
-            password_contains_numbers(password) +
-            password_contains_register(password) +
-            password_contains_special(password) +
-            password_in_blacklist(password, blacklist)
-    )
-    return password_strength
+    if not password_not_in_blacklist(password, blacklist):
+        strength = 1
+    else:
+        strength = sum([
+            get_password_length(password) * 2,
+            password_contains_numbers(password) * 2,
+            case_sensitivity_check(password) * 2,
+            password_contains_special(password) * 2,
+            password_not_in_blacklist(password, blacklist) * 2
+        ])
+    return strength
 
 
 if __name__ == '__main__':
     try:
         blacklist = load_blacklist(sys.argv[1])
-        password = input('Please enter your password: ')
+        password = getpass.getpass('Please enter your password: ')
         password_strength = get_password_strength(password, blacklist)
         print("Your password's strength is {}".format(password_strength))
 
