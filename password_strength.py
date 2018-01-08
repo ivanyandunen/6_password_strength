@@ -21,10 +21,7 @@ def password_contains_numbers(password):
 
 
 def case_sensitivity_check(password):
-    if not password.isdigit():
-        return not bool(password.isupper() or password.islower())
-    else:
-        return False
+    return not any([password.isdigit(), password.isupper(), password.islower()])
 
 
 def password_contains_special(password):
